@@ -205,13 +205,17 @@
     <FilesToPackage Include="@(Inf->'%(CopyOutput)')" Condition="'@(Inf)'!=''" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="core.cpp" />
-    <ClCompile Include="utilities.cpp" />
+    <ClCompile Include="IO_Control.cc" />
+    <ClCompile Include="Kernel_Force_Delete.cc" />
+    <ClCompile Include="Main.cc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="core.h" />
-    <ClInclude Include="io_codes.h" />
-    <ClInclude Include="utilities.h" />
+    <ClInclude Include="CRTCPP.hpp" />
+    <ClInclude Include="IO_Control.h" />
+    <ClInclude Include="Kernel_Force_Delete.h" />
+    <ClInclude Include="Link_List.hpp" />
+    <ClInclude Include="Ntddk.hpp" />
+    <ClInclude Include="NtSysAPI_Func.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

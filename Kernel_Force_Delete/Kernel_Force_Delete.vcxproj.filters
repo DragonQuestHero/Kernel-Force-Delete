@@ -24,21 +24,33 @@
     </Inf>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="core.cpp">
+    <ClCompile Include="Main.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="utilities.cpp">
+    <ClCompile Include="IO_Control.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Kernel_Force_Delete.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="core.h">
+    <ClInclude Include="CRTCPP.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="io_codes.h">
+    <ClInclude Include="Link_List.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="utilities.h">
+    <ClInclude Include="Ntddk.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NtSysAPI_Func.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IO_Control.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Kernel_Force_Delete.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
