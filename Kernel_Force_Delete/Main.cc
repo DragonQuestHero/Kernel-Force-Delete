@@ -2,9 +2,14 @@
 #include "IO_Control.h"
 #include "Kernel_Force_Delete.h"
 
+IO_Control *_IO_Control = nullptr;
+Kernel_Force_Delete *_Kernel_Force_Delete = nullptr;
+
 
 void DriverUnload(PDRIVER_OBJECT drive_object)
 {
+	delete _IO_Control;
+	delete _Kernel_Force_Delete;
 	DbgPrint("Unload Over!\n");
 }
 
@@ -12,11 +17,11 @@ extern "C" NTSTATUS DriverEntry(PDRIVER_OBJECT drive_object, PUNICODE_STRING pat
 {
 	drive_object->DriverUnload = DriverUnload;
 
-	IO_Control *i = new IO_Control(drive_object);
-	i->Create_IO_Control();
+	_IO_Control = new IO_Control(drive_object);
+	_IO_Control->Create_IO_Control();
 
 
-	Kernel_Force_Delete *f = new Kernel_Force_Delete();
+	_Kernel_Force_Delete = new Kernel_Force_Delete();
 
 	return STATUS_SUCCESS;
 }

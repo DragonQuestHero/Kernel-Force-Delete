@@ -9,7 +9,13 @@ public:
 	{
 		Driver_Object = drive_object;
 	}
-	~IO_Control() = default;
+	~IO_Control()
+	{
+		if (_Unload == false)
+		{
+			Delete_IO_Control();
+		}
+	}
 public:
 	NTSTATUS Create_IO_Control();
 	NTSTATUS Delete_IO_Control();
@@ -21,5 +27,6 @@ private:
 	DEVICE_OBJECT *Device_Object = nullptr;
 	UNICODE_STRING Device_Name;
 	UNICODE_STRING Link_Name;
+	bool _Unload = false;
 };
 

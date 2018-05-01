@@ -42,6 +42,7 @@ NTSTATUS IO_Control::Delete_IO_Control()
 {
 	IoDeleteSymbolicLink(&Link_Name);
 	IoDeleteDevice(Device_Object);
+	_Unload = true;
 	DbgPrint("Link_Unload\n");
 	return STATUS_SUCCESS;
 }
@@ -61,15 +62,22 @@ NTSTATUS IO_Control::Code_Control_Center(PDEVICE_OBJECT  DeviceObject, PIRP  pIr
 	ULONG Input_Lenght = irp->Parameters.DeviceIoControl.InputBufferLength;
 	ULONG Output_Lenght = irp->Parameters.DeviceIoControl.OutputBufferLength;
 
+	UNICODE_STRING return_str = { 0 };
 	if (Io_Control_Code == TEST_1)
 	{
 		WCHAR *temp_path = new WCHAR[Input_Lenght];
 		RtlCopyMemory(temp_path, pIrp->AssociatedIrp.SystemBuffer, Input_Lenght);
 		DbgPrint("%S", temp_path);
-		Kernel_Force_Delete::Delete_File_Mode1(temp_path);
+		if (Kernel_Force_Delete::Delete_File_Mode1(temp_path))
+		{
+			RtlInitUnicodeString(&return_str, L"SUCCESS");
+		}
+		else
+		{
+			RtlInitUnicodeString(&return_str, L"ERROR");
+		}
 	}
 
-	DECLARE_CONST_UNICODE_STRING(return_str, L"SUCCESS");
 	RtlCopyMemory(pIrp->AssociatedIrp.SystemBuffer, return_str.Buffer, return_str.MaximumLength);
 	pIrp->IoStatus.Status = STATUS_SUCCESS;
 	pIrp->IoStatus.Information = return_str.MaximumLength;
