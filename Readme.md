@@ -1,6 +1,6 @@
-#Kernel Force Delete
+# Kernel Force Delete
 
-###just look at pic
+### just look at pic
 
 QT GUI application not complete
 
