@@ -22,7 +22,7 @@ static std::wstring C_TO_W(std::string str)
 	return result;
 }
 
-int Start(const wchar_t *path ,int lenght)
+int Delete(const wchar_t *path ,int lenght)
 {
 	HANDLE m_hDevice = CreateFileA("\\\\.\\IO_Control", GENERIC_READ | GENERIC_WRITE, 0,
 		NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
 {
 	string str = "\\??\\" + string(argv[1]);
 	wstring temp_str = C_TO_W(str);
-	Start(temp_str.data(), temp_str.length());
+	Delete(temp_str.data(), temp_str.length());
 
 	return 0;
 }

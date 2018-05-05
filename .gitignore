@@ -189,3 +189,4 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
+/Kernel_Force_Delete_R3_Test/*.opendb
