@@ -190,3 +190,6 @@ GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
 /Kernel_Force_Delete_R3_Test/*.opendb
+/Kernel_Force_Delete/Win7Release/Kernel_Force_Delete.inf
+/Win7Release/Kernel_Force_Delete.inf
+/Win7Release/Kernel_Force_Delete.sys
