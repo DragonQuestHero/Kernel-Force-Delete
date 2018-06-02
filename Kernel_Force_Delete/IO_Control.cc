@@ -77,6 +77,20 @@ NTSTATUS IO_Control::Code_Control_Center(PDEVICE_OBJECT  DeviceObject, PIRP  pIr
 			RtlInitUnicodeString(&return_str, L"ERROR");
 		}
 	}
+	if (Io_Control_Code == TEST_2)
+	{
+		WCHAR *temp_path = new WCHAR[Input_Lenght];
+		RtlCopyMemory(temp_path, pIrp->AssociatedIrp.SystemBuffer, Input_Lenght);
+		DbgPrint("%S", temp_path);
+		if (Kernel_Force_Delete::Unlock_File_Mode1(temp_path))
+		{
+			RtlInitUnicodeString(&return_str, L"SUCCESS");
+		}
+		else
+		{
+			RtlInitUnicodeString(&return_str, L"ERROR");
+		}
+	}
 
 	RtlCopyMemory(pIrp->AssociatedIrp.SystemBuffer, return_str.Buffer, return_str.MaximumLength);
 	pIrp->IoStatus.Status = STATUS_SUCCESS;
