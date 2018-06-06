@@ -147,3 +147,91 @@ _Error:
 	KeDetachProcess();
 	return false;
 }
+
+
+BOOLEAN isFile(unsigned char type)
+{
+	return type == 0x1c; //for XP
+}
+
+NTSTATUS getFullPathName(FILE_OBJECT* fileObject, OBJECT_NAME_INFORMATION **objectNameInformation)
+{
+
+	return IoQueryFileDosDeviceName(fileObject,
+		objectNameInformation
+		);
+
+}
+SYSTEM_HANDLE_INFORMATION * enumerateHandles()
+{
+	SYSTEM_HANDLE_INFORMATION shi = { 0 };
+	SYSTEM_HANDLE_INFORMATION *shiTable;
+	unsigned long shiTableSize;
+
+	UNICODE_STRING ZwQuerySystemInformation_Func_Name;
+	RtlInitUnicodeString(&ZwQuerySystemInformation_Func_Name, L"ZwQuerySystemInformation");
+	_ZwQuerySystemInformation ZwQuerySystemInformation = (_ZwQuerySystemInformation)
+		MmGetSystemRoutineAddress(&ZwQuerySystemInformation_Func_Name);
+
+
+	int status = ZwQuerySystemInformation((SYSTEM_INFORMATION_CLASS)SystemHandleInformation,
+		&shi,
+		sizeof(SYSTEM_HANDLE_INFORMATION),
+		&shiTableSize);
+	//TODO: check status		
+	shiTable = (SYSTEM_HANDLE_INFORMATION*)ExAllocatePoolWithTag(NonPagedPool, shiTableSize, 0xdeadbeef);
+	status = ZwQuerySystemInformation((SYSTEM_INFORMATION_CLASS)SystemHandleInformation,
+		shiTable,
+		shiTableSize,
+		0);
+
+	return shiTable;
+}
+void r0_closeAllHandles(wchar_t* filePath)
+{
+	SYSTEM_HANDLE_INFORMATION *shiTable;
+	PEPROCESS eprocess;
+	unsigned long i;
+	FILE_OBJECT *file;
+	OBJECT_NAME_INFORMATION *objectNameInformation = 0;
+	unsigned long filePathLength = wcslen(filePath);
+
+	shiTable = enumerateHandles();
+	for (i = 0; i < shiTable->NumberOfHandles; i++)
+	{
+		if (isFile(shiTable->Handles[i].ObjectTypeIndex))
+		{
+			file = (FILE_OBJECT*)shiTable->Handles[i].Object;
+			if (!file || file->FileName.Length == 0)
+				continue;
+
+			getFullPathName(file, &objectNameInformation);
+
+			/*if ((objectNameInformation->Name.Length / 2) != filePathLength)
+				continue;*/
+
+			if (!_wcsnicmp(filePath, (wchar_t*)objectNameInformation->Name.Buffer, filePathLength))
+			{
+				//PsLookupProcessByProcessId((HANDLE)shiTable->Handles[i].UniqueProcessId, &eprocess);
+				//KeAttachProcess(eprocess);//switch context to process one
+				//ZwClose((HANDLE)shiTable->Handles[i].HandleValue);
+				//KeDetachProcess();
+				file->SharedRead = true;
+				file->SharedWrite = true;
+				file->SharedDelete = true;
+			}
+		}
+	}
+
+	ExFreePoolWithTag(shiTable, 0xdeadbeef);
+}
+
+bool Kernel_Force_Delete::Unlock_File_Mode2(wchar_t *path)
+{
+	PEPROCESS eproc = IoGetCurrentProcess();
+	//switch context to UserMode
+	KeAttachProcess(eproc);
+	r0_closeAllHandles(path);
+	KeDetachProcess();
+	return true;
+}

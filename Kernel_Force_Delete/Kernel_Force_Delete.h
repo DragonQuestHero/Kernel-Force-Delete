@@ -13,5 +13,7 @@ public:
 public:
 	static bool Delete_File_Mode1(wchar_t *);
 	static bool Unlock_File_Mode1(wchar_t *);
+
+	static bool Unlock_File_Mode2(wchar_t *);
 };
 
