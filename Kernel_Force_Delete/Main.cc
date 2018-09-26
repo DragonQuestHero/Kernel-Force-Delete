@@ -22,6 +22,8 @@ extern "C" NTSTATUS DriverEntry(PDRIVER_OBJECT drive_object, PUNICODE_STRING pat
 
 
 	_Kernel_Force_Delete = new Kernel_Force_Delete();
+	DbgBreakPoint();
+	_Kernel_Force_Delete->Unlock_File_Mode2(L"C:\\1.txt");
 
 	return STATUS_SUCCESS;
 }
