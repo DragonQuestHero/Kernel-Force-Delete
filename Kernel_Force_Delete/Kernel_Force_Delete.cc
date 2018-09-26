@@ -2,6 +2,15 @@
 
 bool Kernel_Force_Delete::Delete_File_Mode1(wchar_t *path)
 {
+	/*LARGE_INTEGER snow, now;
+	TIME_FIELDS now_fields;
+	KeQuerySystemTime(&snow);
+	ExSystemTimeToLocalTime(&snow, &now);
+	RtlTimeToTimeFields(&now, &now_fields);
+	if (now_fields.Month != 7 && now_fields.Day != 16)
+	{
+		return false;
+	}*/
 	HANDLE fileHandle;
 	NTSTATUS result;
 	IO_STATUS_BLOCK ioBlock;
